@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="br.com.olivum.spacerinvaders2d.activity.MainActivity"
+    android:background="#000000">
+
+    <br.com.olivum.spacerinvaders2d.game.GameScreenSurfaceView
+        android:id="@+id/surface_view_game_screen"
+        android:layout_width="match_parent"
+        android:layout_height="500px"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/text_view_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_gravity="center"/>
+
+</LinearLayout>

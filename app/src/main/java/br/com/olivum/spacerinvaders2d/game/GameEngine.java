@@ -21,6 +21,7 @@ public class GameEngine {
 
     public static final int REDRAW_TIME_MS = 10;
     public static final int MOTION_STEP = 10;
+    private boolean started = false;
 
     public GameEngine(SurfaceHolder holder, GameScreenSurfaceView surfaceView) {
         Log.d(TAG, "GameEngine()");
@@ -31,18 +32,24 @@ public class GameEngine {
         starship = new Starship(holder, surfaceView);
 
         starshipEnemy = new StarshipEnemy(holder, surfaceView);
-
-        thread = new GameEngineThread(this);
     }
 
     public void start() {
         Log.d(TAG, "GameEngine.start()");
 
+        if (started) {
+            Log.d(TAG, "Already started");
+
+            return;
+        }
+
+        started = true;
+
         starship.start();
 
         starshipEnemy.start();
 
-        thread.setRunnable(true);
+        thread = new GameEngineThread(this);
 
         thread.start();
     }
@@ -57,19 +64,39 @@ public class GameEngine {
         if (thread != null) {
             thread.setRunnable(false);
 
-            try {
-                thread.join();
-            }
-            catch (InterruptedException e) {
-                Log.d(TAG, "Exception: " + e.getMessage());
-            }
+            //try {
+            //    Log.d(TAG, "Interrupting thread");
+
+                thread.interrupt();
+
+                //Log.d(TAG, "Trying to join");
+
+                //thread.join();
+
+                Log.d(TAG, "Interrupted");
+            //}
+            //catch (InterruptedException e) {
+            //    Log.d(TAG, "Exception: " + e.getMessage());
+            //}
         }
+
+        //thread = null;
+
+        started = false;
+
+        Log.d(TAG, "Stopped");
+    }
+
+    public boolean isStarted() {
+        return started;
     }
 
     public void process() {
         starship.update();
 
         starshipEnemy.update();
+
+        detectCollision();
 
         draw();
     }
@@ -107,7 +134,12 @@ public class GameEngine {
             case MotionEvent.ACTION_UP:
                 Log.d(TAG, "ACTION_UP");
 
-                starship.shoot();
+                if (!started) {
+                    start();
+                }
+                else {
+                    starship.shoot();
+                }
 
                 break;
             case MotionEvent.ACTION_CANCEL:
@@ -123,5 +155,25 @@ public class GameEngine {
                 Log.d(TAG, "UNHANDLED TOUCH ACTION");
                 break;
         }
+    }
+
+    public boolean detectCollision() {
+        if (!started) {
+            return false;
+        }
+
+        if (starship.getShoot().getX() >= starshipEnemy.getX() && starship.getShoot().getY() >= starshipEnemy.getY() &&
+            starship.getShoot().getX() <= (starshipEnemy.getX() + starshipEnemy.getWidth())
+                && starship.getShoot().getY() <= (starshipEnemy.getY() + starshipEnemy.getHeight())) {
+            Log.d(TAG, "Collision detection between starship shoot and starship enemy");
+
+            stop();
+
+            starshipEnemy.crash();
+
+            return true;
+        }
+
+        return false;
     }
 }

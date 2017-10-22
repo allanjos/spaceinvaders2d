@@ -16,7 +16,6 @@ import br.com.olivum.spacerinvaders2d.R;
 
 public class Starship {
     private static final String TAG = "Starship";
-    private StarshipSurfaceThread surfaceThread = null;
     private SurfaceHolder surfaceHolder = null;
     private GameScreenSurfaceView surfaceView = null;
     private Bitmap bitmap = null;
@@ -42,8 +41,6 @@ public class Starship {
 
     private void init() {
         bitmap = BitmapFactory.decodeResource(surfaceView.getResources(), R.mipmap.ic_launcher);
-
-        surfaceThread = new StarshipSurfaceThread(this, surfaceHolder, surfaceView);
 
         x = (surfaceView.getWidth() - bitmap.getWidth()) / 2;
 
@@ -83,24 +80,11 @@ public class Starship {
     }
 
     public void start() {
-        surfaceThread.setRunnable(true);
-
-        surfaceThread.start();
+        init();
     }
 
     public void stop() {
         shoot.stop();
-
-        if (surfaceThread != null) {
-            surfaceThread.setRunnable(false);
-
-            try {
-                surfaceThread.join();
-            }
-            catch (InterruptedException e) {
-                Log.d(TAG, "Exception: " + e.getMessage());
-            }
-        }
     }
 
     public void clear(Canvas canvas) {

@@ -13,7 +13,6 @@ import android.view.SurfaceHolder;
 
 public class StarshipShoot {
     private static final String TAG = "StarshipShoot";
-    //private StarshipSurfaceThread surfaceThread = null;
     private SurfaceHolder surfaceHolder = null;
     private GameScreenSurfaceView surfaceView = null;
     private Bitmap bitmap = null;
@@ -45,6 +44,14 @@ public class StarshipShoot {
         y = starship.getY() - height;
 
         Log.d(TAG, "x=" + x + ", y=" + y);
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public void start() {

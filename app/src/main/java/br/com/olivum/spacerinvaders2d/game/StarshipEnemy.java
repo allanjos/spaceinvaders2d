@@ -16,7 +16,6 @@ import br.com.olivum.spacerinvaders2d.R;
 
 public class StarshipEnemy {
     private static final String TAG = "StarshipEnemy";
-    private StarshipEnemySurfaceThread surfaceThread = null;
     private SurfaceHolder surfaceHolder = null;
     private GameScreenSurfaceView surfaceView = null;
     private Bitmap bitmap = null;
@@ -30,14 +29,14 @@ public class StarshipEnemy {
     private int y0 = margin;
 
     private int x = x0;
+    private int y = y0;
+    private boolean crashed = false;
 
     public StarshipEnemy(SurfaceHolder holder, GameScreenSurfaceView surfaceView) {
         this.surfaceHolder = holder;
         this.surfaceView = surfaceView;
 
         bitmap = BitmapFactory.decodeResource(surfaceView.getResources(), R.mipmap.ic_launcher_round);
-
-        surfaceThread = new StarshipEnemySurfaceThread(this, surfaceHolder, surfaceView);
     }
 
     public SurfaceHolder getSurfaceHolder() {
@@ -48,23 +47,26 @@ public class StarshipEnemy {
         return surfaceView;
     }
 
-    public void start() {
-        surfaceThread.setRunnable(true);
+    public int getX() {
+        return x;
+    }
 
-        surfaceThread.start();
+    public int getY() {
+        return y;
+    }
+
+    public int getWidth() {
+        return bitmap.getWidth();
+    }
+
+    public int getHeight() {
+        return bitmap.getHeight();
+    }
+
+    public void start() {
     }
 
     public void stop() {
-        if (surfaceThread != null) {
-            surfaceThread.setRunnable(false);
-
-            try {
-                surfaceThread.join();
-            }
-            catch (InterruptedException e) {
-                Log.d(TAG, "Exception: " + e.getMessage());
-            }
-        }
     }
 
     public void clear(Canvas canvas) {
@@ -72,7 +74,7 @@ public class StarshipEnemy {
 
         paint.setColor(Color.BLACK);
 
-        canvas.drawRect(x, y0, x + bitmap.getWidth(), y0 + bitmap.getHeight(), paint);
+        canvas.drawRect(x, y, x + bitmap.getWidth(), y + bitmap.getHeight(), paint);
     }
 
     public void update() {
@@ -102,6 +104,12 @@ public class StarshipEnemy {
 
         paint.setColor(Color.BLUE);
 
-        canvas.drawBitmap(bitmap, x, y0, paint);
+        canvas.drawBitmap(bitmap, x, y, paint);
+    }
+
+    public void crash() {
+        Log.d(TAG, "Crashed");
+
+        crashed = true;
     }
 }

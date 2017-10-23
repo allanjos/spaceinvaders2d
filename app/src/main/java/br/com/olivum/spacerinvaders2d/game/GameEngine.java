@@ -162,9 +162,14 @@ public class GameEngine {
             return false;
         }
 
-        if (starship.getShoot().getX() >= starshipEnemy.getX() && starship.getShoot().getY() >= starshipEnemy.getY() &&
-            starship.getShoot().getX() <= (starshipEnemy.getX() + starshipEnemy.getWidth())
-                && starship.getShoot().getY() <= (starshipEnemy.getY() + starshipEnemy.getHeight())) {
+             // By right side
+        if ((starship.getShoot().getX() >= starshipEnemy.getX() && starship.getShoot().getY() >= starshipEnemy.getY() &&
+             starship.getShoot().getX() <= (starshipEnemy.getX() + starshipEnemy.getWidth())
+                && starship.getShoot().getY() <= (starshipEnemy.getY() + starshipEnemy.getHeight())) ||
+                // By left side
+            (starship.getShoot().getX() + starship.getShoot().getWidth() >= starshipEnemy.getX() && starship.getShoot().getY() >= starshipEnemy.getY() &&
+             starship.getShoot().getX() + starship.getShoot().getWidth() <= (starshipEnemy.getX() + starshipEnemy.getWidth())
+                    && starship.getShoot().getY() <= (starshipEnemy.getY() + starshipEnemy.getHeight()))) {
             Log.d(TAG, "Collision detection between starship shoot and starship enemy");
 
             stop();

@@ -54,6 +54,14 @@ public class StarshipShoot {
         return y;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     public void start() {
         if (started) {
             return;
